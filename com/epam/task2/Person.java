@@ -4,19 +4,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Simulates the behavior of a person,
+ * having three fields : name, second name passport number.
+ */
 public class Person {
     private final String name;
     private final String second_name;
     private final int passport_number;
-
 
     public Person (String name, String second_name, int passport_number) {
         this.name = name;
         this.second_name = second_name;
         this.passport_number = passport_number;
     }
-
-
 
     public String getName() {
         return name;

@@ -8,6 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Emulates behaviour of store to provide rental services sports goods
+ *  field goods it's all sport equipments in store.
+ *  field available it's sport equipments in store what you can take.
+ *  field tallySheet it's list of people who take some sport items.
+ */
+
 public class Shop {
     private final Integer ITEMS_LIMIT = 3;
 
@@ -15,6 +22,12 @@ public class Shop {
     private Map<String, Integer> available = new HashMap<>();
     private Map<Person,HashMap<String,Integer>> tallySheet = new HashMap<>();
 
+    /**
+     * Fill the store merchandise by reading information from a file
+     *
+     * @param wayToFile
+     * @throws Exception if not four arguments
+     */
     public void fillShopItems(String wayToFile) throws Exception {
         List<String> lines = Files.readAllLines(Paths.get(wayToFile));
         String [] arr;
@@ -23,16 +36,25 @@ public class Shop {
             if(arr.length != 4) {
                 throw new Exception("invalid input from file");
             }
-//            System.out.println(arr[0] + " " + arr[1] + " " + Integer.parseInt(arr[2]) +
-//            " " + Integer.parseInt(arr[3].replace(" ","")));
+
             String goodName = arr[0] + "_" + arr[1];
 
-           goods.put(goodName ,new SportEquipment(arr[0],arr[1],Integer.valueOf(arr[2])));
-           available.put(goodName,Integer.valueOf(arr[3].replace(" ", "")));
+            goods.put(goodName ,new SportEquipment(arr[0],arr[1],Integer.valueOf(arr[2])));
+            available.put(goodName,Integer.valueOf(arr[3].replace(" ", "")));
 
         }
     }
 
+    /**
+     * Processes the request from person, add him at shop list if hi is not there.
+     * Check how many, people took the goods.
+     *
+     * @param person
+     * @param category
+     * @param title name of good
+     * @param quantity
+     * @throws Exception if person try to take goods more than 3, or if the store is not enough goods.
+     */
     public void requestHandler (Person person, String category, String title,int quantity) throws Exception {
         String goodName = category + "_" + title;
 
@@ -60,17 +82,19 @@ public class Shop {
         }
     }
 
-    public void setEquipment(String goodName,int quantity) {
-        available.put(goodName,quantity);
+    public void printAllGoods() {
+        for(Map.Entry<String, SportEquipment> pair : goods.entrySet()) {
+            System.out.println(pair.getKey() + " " + pair.getValue());
+        }
     }
 
-    public void printAvilable() {
+    public void printAvailableGoods() {
         for(Map.Entry<String,Integer> pair : available.entrySet()) {
             System.out.println(pair.getKey() + " " + pair.getValue());
         }
     }
 
-    public void printTalltSheet() {
+    public void printTallySheet() {
         for(Map.Entry<Person, HashMap<String, Integer>> pair : tallySheet.entrySet()) {
             System.out.println(pair.getKey() + " " + pair.getValue());
         }

@@ -1,6 +1,9 @@
 package com.epam.task2;
 
-
+/**
+ * emulate behaviour of sport equipment.
+ * have category, title, price;
+ */
 public class SportEquipment {
     private final String category;
     private final String title;

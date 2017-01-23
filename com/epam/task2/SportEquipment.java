@@ -33,11 +33,10 @@ public class SportEquipment {
 
     @Override
     public String toString() {
-        return "\n" + "SportEquipment : " +
-                "category='" + category + '\'' +
-                ", title='" + title + '\'' +
-                ", price=" + price +
-                ", quantity";
+        return    "Category= : " + category +
+                ", title= : " + title +
+                ", price= : " + price +
+                ", quantity : ";
 
     }
 }

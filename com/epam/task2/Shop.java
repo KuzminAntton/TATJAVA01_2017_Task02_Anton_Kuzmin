@@ -10,17 +10,17 @@ import java.util.Map;
 
 /**
  * Emulates behaviour of store to provide rental services sports goods
- *  field goods it's all sport equipments in store.
- *  field available it's sport equipments in store what you can take.
- *  field tallySheet it's list of people who take some sport items.
+ * field goods it's all sport equipments in store.
+ * field available it's sport equipments in store what you can take.
+ * field tallySheet it's list of people who take some sport items.
  */
 
 public class Shop {
     private final Integer ITEMS_LIMIT = 3;
 
-    private Map<String,SportEquipment> goods = new HashMap<>();
+    private Map<SportEquipment,Integer> goods = new HashMap<>();
     private Map<String, Integer> available = new HashMap<>();
-    private Map<Person,HashMap<String,Integer>> tallySheet = new HashMap<>();
+    private Map<Person, HashMap<String, Integer>> tallySheet = new HashMap<>();
 
     /**
      * Fill the store merchandise by reading information from a file
@@ -30,17 +30,17 @@ public class Shop {
      */
     public void fillShopItems(String wayToFile) throws Exception {
         List<String> lines = Files.readAllLines(Paths.get(wayToFile));
-        String [] arr;
+        String[] arr;
         for (String line : lines) {
             arr = line.split(",");
-            if(arr.length != 4) {
+            if (arr.length != 4) {
                 throw new Exception("invalid input from file");
             }
 
             String goodName = arr[0] + "_" + arr[1];
 
-            goods.put(goodName ,new SportEquipment(arr[0],arr[1],Integer.valueOf(arr[2])));
-            available.put(goodName,Integer.valueOf(arr[3].replace(" ", "")));
+            goods.put(new SportEquipment(arr[0], arr[1], Integer.valueOf(arr[2])), Integer.parseInt(arr[3].replace(" ","")));
+            available.put(goodName, Integer.valueOf(arr[3].replace(" ", "")));
 
         }
     }
@@ -51,53 +51,57 @@ public class Shop {
      *
      * @param person
      * @param category
-     * @param title name of good
+     * @param title    name of good
      * @param quantity
      * @throws Exception if person try to take goods more than 3, or if the store is not enough goods.
      */
-    public void requestHandler (Person person, String category, String title,int quantity) throws Exception {
+    public void requestHandler(Person person, String category, String title, int quantity) throws Exception {
         String goodName = category + "_" + title;
 
-        if(!tallySheet.containsKey(person)) {
+        if (!tallySheet.containsKey(person)) {
             Map<String, Integer> userItemsList = new HashMap<>();
             tallySheet.put(person, (HashMap<String, Integer>) userItemsList);
         }
         int itemsTotal = 0;
         HashMap<String, Integer> personRepo = tallySheet.get(person);
-        for(Integer quant : personRepo.values()) {
+        for (Integer quant : personRepo.values()) {
             itemsTotal += quant;
         }
         if (itemsTotal + quantity > ITEMS_LIMIT) {
-            throw new Exception("Exceeded the limit of goods per person " + person );
+            throw new Exception("Exceeded the limit of goods per person " + person);
         } else if (!available.containsKey(goodName) || available.get(goodName) < quantity) {
             throw new Exception("Insufficient number of goods in the shop");
         } else {
             available.put(goodName, available.get(goodName) - quantity);
             if (personRepo.containsKey(goodName)) {
                 personRepo.put(goodName, personRepo.get(goodName) + quantity);
-            }
-            else {
+            } else {
                 personRepo.put(goodName, quantity);
             }
         }
     }
 
     public void printAllGoods() {
-        for(Map.Entry<String, SportEquipment> pair : goods.entrySet()) {
+        System.out.println("All Goods");
+        for (Map.Entry<SportEquipment, Integer> pair : goods.entrySet()) {
             System.out.println(pair.getKey() + " " + pair.getValue());
         }
+        System.out.println();
     }
 
     public void printAvailableGoods() {
-        for(Map.Entry<String,Integer> pair : available.entrySet()) {
-            System.out.println(pair.getKey() + " " + pair.getValue());
+        System.out.println("Available equipments");
+        for (Map.Entry<String, Integer> pair : available.entrySet()) {
+            System.out.println("Title : {" + pair.getKey() + "} Quantity : {" + pair.getValue() + "}");
         }
+        System.out.println();
     }
 
     public void printTallySheet() {
-        for(Map.Entry<Person, HashMap<String, Integer>> pair : tallySheet.entrySet()) {
+        for (Map.Entry<Person, HashMap<String, Integer>> pair : tallySheet.entrySet()) {
             System.out.println(pair.getKey() + " " + pair.getValue());
         }
+        System.out.println();
     }
 
 }

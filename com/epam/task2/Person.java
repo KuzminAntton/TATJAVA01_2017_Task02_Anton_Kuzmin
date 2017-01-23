@@ -10,13 +10,13 @@ import java.util.Map;
  */
 public class Person {
     private final String name;
-    private final String second_name;
-    private final int passport_number;
+    private final String secondName;
+    private final int passportNumber;
 
-    public Person (String name, String second_name, int passport_number) {
+    public Person(String name, String second_name, int passport_number) {
         this.name = name;
-        this.second_name = second_name;
-        this.passport_number = passport_number;
+        this.secondName = second_name;
+        this.passportNumber = passport_number;
     }
 
     public String getName() {
@@ -24,18 +24,17 @@ public class Person {
     }
 
     public String getSecond_name() {
-        return second_name;
+        return secondName;
     }
 
     public int getPassport_number() {
-        return passport_number;
+        return passportNumber;
     }
 
     @Override
     public String toString() {
-        return "Person : " +
-                "name = " + name +
-                ", second_name = " + second_name +
-                ", passport_number = " + passport_number;
+        return  "Name : " + name +
+                ", Second name : " + secondName +
+                ", Passport number : " + passportNumber;
     }
 }

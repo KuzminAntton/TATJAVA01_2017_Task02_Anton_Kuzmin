@@ -18,7 +18,7 @@ import java.util.Map;
 public class Shop {
     private final Integer ITEMS_LIMIT = 3;
 
-    private Map<SportEquipment,Integer> goods = new HashMap<>();
+    private Map<SportEquipment, Integer> goods = new HashMap<>();
     private Map<String, Integer> available = new HashMap<>();
     private Map<Person, HashMap<String, Integer>> tallySheet = new HashMap<>();
 
@@ -39,7 +39,7 @@ public class Shop {
 
             String goodName = arr[0] + "_" + arr[1];
 
-            goods.put(new SportEquipment(arr[0], arr[1], Integer.valueOf(arr[2])), Integer.parseInt(arr[3].replace(" ","")));
+            goods.put(new SportEquipment(arr[0], arr[1], Integer.valueOf(arr[2])), Integer.parseInt(arr[3].replace(" ", "")));
             available.put(goodName, Integer.valueOf(arr[3].replace(" ", "")));
 
         }
@@ -55,7 +55,7 @@ public class Shop {
      * @param quantity
      * @throws Exception if person try to take goods more than 3, or if the store is not enough goods.
      */
-    public void requestHandler(Person person, String category, String title, int quantity) throws Exception {
+    public void addingRequestHandler(Person person, String category, String title, int quantity) throws Exception {
         String goodName = category + "_" + title;
 
         if (!tallySheet.containsKey(person)) {
@@ -70,7 +70,7 @@ public class Shop {
         if (itemsTotal + quantity > ITEMS_LIMIT) {
             throw new Exception("Exceeded the limit of goods per person " + person);
         } else if (!available.containsKey(goodName) || available.get(goodName) < quantity) {
-            throw new Exception("Insufficient number of goods in the shop");
+            throw new Exception("Insufficient number of goods in the shop, or this equipment isn't available.");
         } else {
             available.put(goodName, available.get(goodName) - quantity);
             if (personRepo.containsKey(goodName)) {
@@ -80,6 +80,45 @@ public class Shop {
             }
         }
     }
+
+    /**
+     * Handle request if some person wont to return equipment, if person return all equipments that he take he will be removed.
+     *
+     * @param person
+     * @param category
+     * @param title
+     * @param quantity quantity of equipments
+     * @throws Exception if person trying return items more than took
+     * if person trying return incorrect equipment
+     * if this equipment doesn't exist in store.
+     */
+    public void returnItemRequestHandler(Person person, String category, String title, int quantity) throws Exception {
+        String goodName = category + "_" + title;
+        HashMap<String, Integer> personRepo = tallySheet.get(person);
+        if (personRepo.containsKey(goodName)) {
+            if ((personRepo.get(goodName) - quantity) < 0) {
+                throw new Exception("Trying return items more than took.");
+            } else if ((personRepo.get(goodName) - quantity) == 0) {
+                personRepo.remove(goodName);
+                if (personRepo.isEmpty()) {
+                    tallySheet.remove(person);
+                    available.put(goodName, available.get(goodName) + quantity);
+                } else {
+                    personRepo.put(goodName, personRepo.get(goodName) - quantity);
+                    available.put(goodName, available.get(goodName) + quantity);
+                }
+            } else {
+                personRepo.put(goodName, personRepo.get(goodName) - quantity);
+                available.put(goodName, available.get(goodName) + quantity);
+            }
+
+        } else {
+            throw new Exception("Can not return the item that was not originally in the store");
+        }
+
+
+    }
+
 
     public void printAllGoods() {
         System.out.println("All Goods");

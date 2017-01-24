@@ -14,12 +14,17 @@ public class Main {
             Person person1 = new Person("Anton", "Kuzmin", 2759690);
             Person person2 = new Person("Andrew", "Kurachev", 3332943);
             Person person3 = new Person("Aliksey", "Stepanov", 2759090);
-            shop.requestHandler(person1, "football", "ball", 3);
-            shop.requestHandler(person2, "basketball", "ball", 1);
-            shop.requestHandler(person2, "football", "boots", 1);
-            shop.requestHandler(person2, "football", "ball", 1);
-            shop.requestHandler(person3, "football", "boots", 3);
-            shop.printAllGoods();
+            shop.addingRequestHandler(person1, "football", "ball", 3);
+            shop.addingRequestHandler(person2, "basketball", "ball", 1);
+            shop.addingRequestHandler(person2, "football", "boots", 1);
+            shop.addingRequestHandler(person2, "football", "ball", 1);
+            shop.addingRequestHandler(person3, "football", "boots", 3);
+
+            shop.printAvailableGoods();
+            shop.printTallySheet();
+
+            shop.returnItemRequestHandler(person3,"football", "boots", 3);
+
             shop.printAvailableGoods();
             shop.printTallySheet();
 

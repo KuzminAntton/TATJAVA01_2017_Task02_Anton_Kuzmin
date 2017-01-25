@@ -119,6 +119,18 @@ public class Shop {
 
     }
 
+    /**
+     * check that equipment stored in the store.
+     *
+     * @param category
+     * @param name
+     * @return true if item stored in shop otherwise false.
+     */
+    public boolean isItemAvailable(String category, String name) {
+        String goodName = category + "_" + name;
+        return available.containsKey(goodName);
+    }
+
 
     public void printAllGoods() {
         System.out.println("All Goods");
